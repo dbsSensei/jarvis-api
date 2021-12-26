@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './services/auth/auth.module';
-import { UsersModule } from './services/users/users.module';
-import { ReportsModule } from './services/reports/reports.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './services/auth/auth.module';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { UsersModule } from './services/users/users.module';
+import { ClassesModule } from './services/classes/classes.module';
+import { ReportsModule } from './services/reports/reports.module';
+import { StudentsModule } from './services/students/students.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
     AuthModule,
     UsersModule,
+    ClassesModule,
+    StudentsModule,
     ReportsModule,
   ],
   controllers: [AppController],

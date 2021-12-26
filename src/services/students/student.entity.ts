@@ -5,43 +5,36 @@ import {
   // AfterInsert,
   // AfterUpdate,
   // AfterRemove,
-  OneToMany,
   UpdateDateColumn,
   CreateDateColumn,
   DeleteDateColumn,
   OneToOne,
+  OneToMany,
+  ManyToOne,
 } from 'typeorm';
+import { User } from 'src/services/users/user.entity';
+import { StudentType } from './interfaces/student-type';
 import { Class } from '../classes/class.entity';
-import { Report } from 'src/services/reports/report.entity';
-import { Student } from '../students/student.entity';
-import { UserRole } from './interfaces/user-role';
 
 @Entity()
-export class User {
+export class Student {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  email: string;
-
   @Column()
-  password: string;
+  name: string;
 
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: 'user',
+    enum: StudentType,
   })
-  role: UserRole;
+  type: StudentType;
 
-  @OneToMany(() => Student, (student) => student.teacher)
-  students: Student[];
+  @ManyToOne(() => User, (teacher) => teacher.students)
+  teacher: User;
 
-  @OneToMany(() => Class, (classEntity) => classEntity.user)
-  classes: Class[];
-
-  @OneToMany(() => Report, (report) => report.user)
-  reports: Report[];
+  @ManyToOne(() => Class, (_class) => _class.students)
+  class: Class;
 
   @CreateDateColumn()
   created_at: Date;
