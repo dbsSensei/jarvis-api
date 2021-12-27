@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Serialize } from '../../interceptors/serialize.interceptor';
 import { ClassesService } from './classes.service';
 // import { UpdateClassDto } from './dtos/update-class-dto';
@@ -7,6 +7,7 @@ import { CreateClassDto } from './dtos/create-class.dto';
 import { JwtAuthGuard } from 'src/guards/auth.guard';
 import { User } from '../users/user.entity';
 import { CurrentUser } from '../users/decorators/current-user-decorator';
+import { UpdateClassDto } from './dtos/update-class.dto';
 
 @Controller('classes')
 @Serialize(ClassDto)
@@ -35,8 +36,9 @@ export class ClassesController {
     return this.classesService.create(body, user);
   }
 
-  // @Patch('/:id')
-  // updateClass(@Param('id') id: string, @Body() body: UpdateClassDto) {
-  //   return this.classesService.update(parseInt(id), body);
-  // }
+  @Patch('/:id')
+  @UseGuards(JwtAuthGuard)
+  updateClass(@Param('id') id: string, @CurrentUser() user: User, @Body() body: UpdateClassDto) {
+    return this.classesService.update(parseInt(id), user, body);
+  }
 }

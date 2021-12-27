@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Utils } from '../../utils';
 import { Repository } from 'typeorm';
@@ -18,26 +22,33 @@ export class UsersService {
 
   async findOne(id: number, passError?: boolean) {
     const user = await this.repo.findOne({ id });
-    if(!user && !passError){
-      throw new NotFoundException('User not found!')
+    if (!user && !passError) {
+      throw new NotFoundException('User not found!');
     }
     return user;
   }
 
-  async findAll(options: Partial<User>) {
+  async findAll(options: Partial<User> | any) {
     options = Utils.objectCleaner(options);
     const user = await this.repo.find({ ...options });
     return user;
   }
 
-  async update(id: number, attrs: Partial<User>) {
-    const user = await this.findOne(id);
-    const updatedUser = { ...user, ...attrs };
-    return this.repo.save(updatedUser);
-  }
+  // async update(id: number, currentUser: User, attrs: Partial<User>) {
+  //   attrs = Utils.objectCleaner(attrs);
+  //   const user = await this.findOne(id);
+  //   if (user.id !== currentUser.id) {
+  //     throw new UnauthorizedException('You not allowed to update this user');
+  //   }
+  //   const updatedUser = { ...user, ...attrs };
+  //   return this.repo.save(updatedUser);
+  // }
 
-  async delete(id: number) {
+  async delete(id: number, currentUser: User) {
     const user = await this.findOne(id);
-    return this.repo.softDelete({id: user.id});
+    if (user.id !== currentUser.id) {
+      throw new UnauthorizedException('You not allowed to delete this user');
+    }
+    return this.repo.softRemove({ id: user.id });
   }
 }

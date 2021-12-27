@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { ClassType } from '../interfaces/class-type';
 
 export class CreateClassDto {
@@ -13,4 +13,8 @@ export class CreateClassDto {
 
   @IsString()
   time: string;
+
+  @IsString()
+  @IsOptional()
+  info?: string;
 }

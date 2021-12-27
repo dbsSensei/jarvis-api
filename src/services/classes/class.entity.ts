@@ -36,6 +36,11 @@ export class Class {
   @Column()
   time: string;
 
+  @Column({
+    nullable: true
+  })
+  info: string;
+
   @ManyToOne(() => User, (user) => user.classes)
   user: User;
 

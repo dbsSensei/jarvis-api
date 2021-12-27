@@ -15,8 +15,13 @@ export class ClassDto {
 
   @Expose()
   time: string;
-  
-  @Transform(({ obj }) => obj.user.id)
+
+  @Expose()
+  info: string;
+
+  @Transform(({ obj }) => {
+    return obj.user.id;
+  })
   @Expose()
   userId: number;
 }
