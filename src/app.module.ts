@@ -20,14 +20,20 @@ import { StudentsModule } from './services/students/students.module';
       useFactory: (config: ConfigService) => {
         return {
           type: 'postgres',
-          host: config.get<string>("DB_HOST"),
-          port: 5432,
-          username: config.get<string>("DB_USERNAME"),
-          password: config.get<string>("DB_PASSWORD"),
-          database: config.get<string>("DB_NAME"),
+          host: config.get<string>('DB_HOST'),
+          port: parseInt(config.get<string>('DB_PORT')),
+          username: config.get<string>('DB_USERNAME'),
+          password: config.get<string>('DB_PASSWORD'),
+          database: config.get<string>('DB_NAME'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          // synchronize: true,
-          logging: true
+          ssl: true,
+          extra: {
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          },
+          synchronize: true,
+          logging: true,
         };
       },
     }),
